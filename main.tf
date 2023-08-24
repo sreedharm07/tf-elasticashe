@@ -1,11 +1,14 @@
 resource "aws_elasticache_subnet_group" "main" {
   name       = "${local.name-pre}-subnet-group"
   subnet_ids = var.subnet_ids
+  tags = merge (var.tags,{Name="${local.name-pre}-subnet-group"})
 }
 
 resource "aws_elasticache_parameter_group" "main" {
   name   = "${local.name-pre}-pg"
   family = var.family
+  tags = merge (var.tags,{Name="${local.name-pre}-pg"})
+
 }
 
 resource "aws_security_group" "main" {
@@ -42,5 +45,7 @@ resource "aws_elasticache_cluster" "main" {
   security_group_ids   = [aws_security_group.main.id]
   subnet_group_name    = aws_elasticache_subnet_group.main.name
   parameter_group_name = aws_elasticache_parameter_group.main.name
+  tags = merge (var.tags,{Name="${local.name-pre}-cluster"})
+
 }
 
